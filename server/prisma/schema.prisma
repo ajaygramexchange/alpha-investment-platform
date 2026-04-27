@@ -8,18 +8,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id           String        @id @default(uuid())
-  email        String        @unique
+  id           String       @id @default(uuid())
+  email        String       @unique
   fullName     String
   passwordHash String
-  kycStatus    String        @default("pending") // pending, verified, rejected
-  role         String        @default("user")    // user, admin
-  createdAt    DateTime      @default(now())
+  kycStatus    String       @default("pending")
+  role         String       @default("user")
+  createdAt    DateTime     @default(now())
   wallets      Wallet[]
   investments  Investment[]
 }
@@ -40,7 +36,7 @@ model Investment {
   planName        String
   principalAmount Decimal  @db.Decimal(20, 8)
   dailyRoi        Decimal  @db.Decimal(5, 2)
-  status          String   @default("active") // active, completed
+  status          String   @default("active")
   startDate       DateTime @default(now())
   maturityDate    DateTime
 }
@@ -49,9 +45,9 @@ model Transaction {
   id        String   @id @default(uuid())
   walletId  String
   wallet    Wallet   @relation(fields: [walletId], references: [id])
-  type      String   // deposit, withdrawal, roi, investment
+  type      String   
   amount    Decimal  @db.Decimal(20, 8)
-  status    String   @default("pending") // pending, success, failed
+  status    String   @default("pending")
   reference String?  @unique
   createdAt DateTime @default(now())
 }
