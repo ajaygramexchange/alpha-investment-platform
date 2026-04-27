@@ -1,0 +1,53 @@
+// This is your blueprint for the database
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // We removed the url = env("DATABASE_URL") line from here
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  fullName     String
+  passwordHash String
+  kycStatus    String        @default("pending") // pending, verified, rejected
+  role         String        @default("user")    // user, admin
+  createdAt    DateTime      @default(now())
+  wallets      Wallet[]
+  investments  Investment[]
+}
+
+model Wallet {
+  id           String        @id @default(uuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  currency     String        @default("USD")
+  balance      Decimal       @default(0) @db.Decimal(20, 8)
+  transactions Transaction[]
+}
+
+model Investment {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  planName        String
+  principalAmount Decimal  @db.Decimal(20, 8)
+  dailyRoi        Decimal  @db.Decimal(5, 2)
+  status          String   @default("active") // active, completed
+  startDate       DateTime @default(now())
+  maturityDate    DateTime
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  walletId  String
+  wallet    Wallet   @relation(fields: [walletId], references: [id])
+  type      String   // deposit, withdrawal, roi, investment
+  amount    Decimal  @db.Decimal(20, 8)
+  status    String   @default("pending") // pending, success, failed
+  reference String?  @unique
+  createdAt DateTime @default(now())
+}

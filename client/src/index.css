@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/* High-end US Fintech Foundation */
+body {
+  background-color: #050810;
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
+/* --- LIVE PAYOUT TICKER ANIMATION --- */
+/* We keep this separate so it doesn't interfere with Tailwind's utility classes */
+
+@keyframes marquee {
+  0% { 
+    transform: translateX(0); 
+  }
+  100% { 
+    transform: translateX(-50%); 
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+/* Pause on hover so users can read the payouts */
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Clean scrollbar to match the dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050810;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #161f33;
+  border-radius: 10px;
+}
